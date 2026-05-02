@@ -1,30 +1,5 @@
 {{ if and (index .Values "karpenter-crds" "enabled") (index .Values "karpenter-crds" "default" "enabled") }}
-{{- if (index .Values "karpenter" "configuration" "enabled") }}
 ---
-# Option B (CSOC-managed): Application CR targeting destinationServer.
-# The cluster's karpenter-node-configs/default directory must exist in the configuration repo.
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: karpenter-node-config-default
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: {{ .Values.configuration.configurationRepo }}
-    path: {{ .Values.cluster }}/karpenter-node-configs/default
-    targetRevision: {{ .Values.configuration.configurationRevision }}
-  destination:
-    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" | quote }}
-    namespace: karpenter
-  syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
-    automated:
-      selfHeal: true
-{{- else }}
----
-# Option A / in-cluster: inline EC2NodeClass + NodePool applied directly to the spoke.
 {{- if semverCompare ">=1.0.8" .Values.karpenter.targetRevision }}
 apiVersion: karpenter.k8s.aws/v1
 {{- else }}
@@ -40,7 +15,7 @@ spec:
   amiFamily: AL2
   {{- end }}
   amiSelectorTerms:
-  {{- if not index .Values "karpenter-crds" "usaAlias" }}
+  {{- if not (index .Values "karpenter-crds" "usaAlias") }}
   - name: {{ index .Values "karpenter-crds" "amiSelectorName" }}
     owner: {{ index .Values "karpenter-crds" "amiOwner" | quote }}
   {{- else }}
@@ -164,6 +139,5 @@ spec:
         name: default
       requirements:
       {{ toYaml (index .Values "karpenter-crds" "default" "requirements") | nindent 6 }}
-{{- end }}
 {{- end }}
 {{ end }}

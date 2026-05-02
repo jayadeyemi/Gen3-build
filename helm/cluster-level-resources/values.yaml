@@ -8,13 +8,6 @@ accountNumber: "xxxxxxxxxxxx"
 
 eksClusterEndpoint: ""
 
-# Destination cluster API server for all generated Application CRs.
-# Default ("") falls back to "https://kubernetes.default.svc" (in-cluster / spoke ArgoCD model).
-# Set to the spoke EKS API endpoint to enable CSOC-direct management (Option B):
-#   destinationServer: "https://<spoke-api-server>"
-# This value is injected by the gen3-kro ClusterResources1 RGD from computeBridge['eks-cluster-endpoint'].
-destinationServer: ""
-
 # This is universal for all of our configuration, we assume that all of the configuration (i.e. values files)
 # live in the same repo, on the same branch
 configuration:
