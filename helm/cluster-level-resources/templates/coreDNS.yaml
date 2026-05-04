@@ -22,7 +22,7 @@ spec:
         values: |
           priorityClassName: system-cluster-critical
           service:
-            clusterIP: "10.100.0.10"
+            clusterIP: {{ index .Values "coreDNS" "configuration" "coreDnsServiceIP" | default "10.100.0.10" | quote }}
             name: "kube-dns"
 
           autoscaler:
