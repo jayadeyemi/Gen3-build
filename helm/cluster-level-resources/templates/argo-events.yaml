@@ -33,7 +33,7 @@ spec:
       {{- end }}
   
   destination:
-    server: https://kubernetes.default.svc
+    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" | quote }}
     namespace: argo-events
   
   syncPolicy:

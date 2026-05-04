@@ -1,4 +1,7 @@
 {{ if and (index .Values "karpenter-crds" "enabled") (index .Values "karpenter-crds" "workflow" "enabled") }}
+{{- if .Values.destinationServer }}
+{{ include "cluster-level-resources.karpenterNodeConfigApp" (dict "root" . "name" "workflow") }}
+{{- else }}
 ---
 {{- if semverCompare ">=1.0.8" .Values.karpenter.targetRevision }}
 apiVersion: karpenter.k8s.aws/v1
@@ -150,3 +153,4 @@ spec:
         value: workflow
 {{- end }}
 {{ end }}
+{{- end }}

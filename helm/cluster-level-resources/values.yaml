@@ -7,12 +7,18 @@ project: unfunded
 accountNumber: "xxxxxxxxxxxx"
 
 eksClusterEndpoint: ""
+destinationServer: ""
 
 # This is universal for all of our configuration, we assume that all of the configuration (i.e. values files)
 # live in the same repo, on the same branch
 configuration:
   configurationRepo: https://github.com/uc-cdis/gen3-gitops
   configurationRevision: master
+
+karpenterNodeConfigChart:
+  repoURL: ""
+  targetRevision: ""
+  path: ""
 
 alb-controller:
   enabled: false
@@ -139,7 +145,7 @@ karpenter-crds:
   selectorTag: ""
   migration: false
   default:
-    enabled: true
+    enabled: false
     weight: 99
     disruptionBudget: "10%"
     consolidation: true
@@ -204,7 +210,7 @@ karpenter-crds:
           - r
           - t
   jupyter:
-    enabled: true
+    enabled: false
     consolidation: true
     consolidateAfter: "30s"
     consolidationPolicy: "WhenEmpty"
@@ -228,7 +234,7 @@ karpenter-crds:
           - r
           - t
   workflow:
-    enabled: true
+    enabled: false
     consolidation: true
     consolidateAfter: "30s"
     consolidationPolicy: "WhenEmpty"

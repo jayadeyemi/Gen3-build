@@ -31,6 +31,6 @@ spec:
     automated:
       selfHeal: true
   destination:
-    server: https://kubernetes.default.svc
+    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" | quote }}
     namespace: monitoring
 {{ end }}

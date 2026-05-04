@@ -124,7 +124,7 @@ spec:
             useSDKCreds: true
       {{- end }}
   destination:
-    server: https://kubernetes.default.svc
+    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" | quote }}
     namespace: {{ index .Values "argo-workflows" "namespace" }}
   syncPolicy:
     automated:

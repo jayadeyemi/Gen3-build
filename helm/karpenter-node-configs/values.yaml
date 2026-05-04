@@ -1,0 +1,56 @@
+resourceName: ""
+cluster: "unfunded"
+
+cilium:
+  enabled: false
+
+karpenter:
+  targetRevision: 1.0.8
+
+karpenter-crds:
+  amiSelectorName: "EKS-FIPS*"
+  amiOwner: "143731057154"
+  useAlias: false
+  alias: "al2023@latest"
+  selectorTag: ""
+  default:
+    enabled: false
+    weight: 99
+    disruptionBudget: "10%"
+    consolidateAfter: "30s"
+    consolidationPolicy: "WhenEmpty"
+    expireAfter: "168h"
+    limits:
+      cpu: "1000"
+      memory: 1000Gi
+    volumeSize: 50Gi
+    requirements: []
+  gpu:
+    enabled: false
+    consolidateAfter: "30s"
+    consolidationPolicy: "WhenEmpty"
+    volumeSize: 50Gi
+  secondary:
+    enabled: false
+    weight: 1
+    disruptionBudget: "10%"
+    consolidateAfter: "30s"
+    consolidationPolicy: "WhenEmpty"
+    expireAfter: "168h"
+    volumeSize: 50Gi
+    requirements: []
+  jupyter:
+    enabled: false
+    consolidateAfter: "30s"
+    consolidationPolicy: "WhenEmpty"
+    expireAfter: "168h"
+    volumeSize: 50Gi
+    requirements: []
+  workflow:
+    enabled: false
+    consolidateAfter: "30s"
+    consolidationPolicy: "WhenEmpty"
+    expireAfter: "168h"
+    volumeSize: 50Gi
+    sgSelector: ""
+    requirements: []

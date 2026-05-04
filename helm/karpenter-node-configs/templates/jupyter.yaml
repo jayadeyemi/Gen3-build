@@ -1,12 +1,5 @@
-{{ if and (index .Values "karpenter-crds" "enabled") (index .Values "karpenter-crds" "jupyter" "enabled") }}
-{{- if .Values.destinationServer }}
-{{ include "cluster-level-resources.karpenterNodeConfigApp" (dict "root" . "name" "jupyter") }}
-{{- else }}
-{{- if semverCompare ">=1.0.8" .Values.karpenter.targetRevision }}
+{{- if and (eq .Values.resourceName "jupyter") (index .Values "karpenter-crds" "jupyter" "enabled") }}
 apiVersion: karpenter.k8s.aws/v1
-{{- else }}
-apiVersion: karpenter.k8s.aws/v1beta1
-{{- end }}
 kind: EC2NodeClass
 metadata:
   name: jupyter
@@ -22,7 +15,7 @@ spec:
     owner: {{ index .Values "karpenter-crds" "amiOwner" | quote }}
   {{- else }}
   - alias: {{ index .Values "karpenter-crds" "alias" | quote }}
-  {{- end }}    
+  {{- end }}
   blockDeviceMappings:
   - deviceName: /dev/xvda
     ebs:
@@ -36,21 +29,17 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: optional
   role: eks_{{ index .Values "karpenter-crds" "selectorTag" }}_workers_role
-
   securityGroupSelectorTerms:
   - tags:
       karpenter.sh/discovery: {{ index .Values "karpenter-crds" "selectorTag" }}-jupyter
-
   subnetSelectorTerms:
   - tags:
       karpenter.sh/discovery: {{ index .Values "karpenter-crds" "selectorTag" }}
-
   tags:
     Environment: {{ .Values.cluster }}
     Name: eks-{{ .Values.cluster }}-karpenter
     karpenter.sh/discovery: {{ index .Values "karpenter-crds" "selectorTag" }}
     purpose: jupyter
-
   userData: |
     MIME-Version: 1.0
     Content-Type: multipart/mixed; boundary="BOUNDARY"
@@ -64,7 +53,6 @@ spec:
     sysctl -w fs.inotify.max_user_watches=12000 &
 
     --BOUNDARY--
-{{- if semverCompare ">=1.0.8" .Values.karpenter.targetRevision }}
   kubelet:
     evictionHard:
       memory.available: 5%
@@ -72,9 +60,7 @@ spec:
       memory.available: 10%
     evictionSoftGracePeriod:
       memory.available: 5m
-{{- end }}
 ---
-{{- if semverCompare ">=1.0.8" .Values.karpenter.targetRevision }}
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
@@ -86,9 +72,9 @@ spec:
         role: jupyter
     spec:
       taints:
-        - effect: NoSchedule
-          key: role
-          value: jupyter
+      - effect: NoSchedule
+        key: role
+        value: jupyter
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
@@ -96,54 +82,13 @@ spec:
       expireAfter: 168h
       terminationGracePeriod: 48h
       requirements:
-      {{ toYaml (index .Values "karpenter-crds" "jupyter" "requirements") | nindent 6 }}
-
+{{ toYaml (index .Values "karpenter-crds" "jupyter" "requirements") | nindent 6 }}
   disruption:
     consolidateAfter: {{ index .Values "karpenter-crds" "jupyter" "consolidateAfter" }}
     consolidationPolicy: {{ index .Values "karpenter-crds" "jupyter" "consolidationPolicy" }}
     budgets:
     - nodes: 10%
-
   limits:
     cpu: "1000"
     memory: 1000Gi
-{{- else }}
-apiVersion: karpenter.sh/v1beta1
-kind: NodePool
-metadata:
-  name: jupyter
-spec:
-  disruption:
-    {{ if eq (index .Values "karpenter-crds" "jupyter" "consolidationPolicy" ) "WhenEmpty" }}
-    consolidateAfter: {{ index .Values "karpenter-crds" "jupyter" "consolidateAfter" }}
-    {{ end }}
-    consolidationPolicy: {{ index .Values "karpenter-crds" "jupyter" "consolidationPolicy" }}
-    expireAfter: {{ index .Values "karpenter-crds" "jupyter" "expireAfter" }}
-  limits:
-    cpu: "1000"
-    memory: 1000Gi
-  template:
-    metadata:
-      labels:
-        role: jupyter
-    spec:
-      kubelet:
-        evictionHard:
-          memory.available: 5%
-        evictionSoft:
-          memory.available: 10%
-        evictionSoftGracePeriod:
-          memory.available: 5m
-      nodeClassRef:
-        apiVersion: karpenter.k8s.aws/v1beta1
-        kind: EC2NodeClass
-        name: jupyter
-      requirements:
-      {{ toYaml (index .Values "karpenter-crds" "jupyter" "requirements") | nindent 6 }}
-      taints:
-      - effect: NoSchedule
-        key: role
-        value: jupyter
-{{- end }}
-{{ end }}
 {{- end }}
