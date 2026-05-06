@@ -24,6 +24,9 @@ alb-controller:
   enabled: false
   targetRevision: "1.13.4"
   hostNetworkEnabled: false
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: ""
   configuration:
     enabled: false
 
@@ -103,6 +106,19 @@ ebs-csi-driver:
 external-secrets:
   enabled: false
   targetRevision: "0.9.13"
+  configuration:
+    enabled: false
+
+external-dns:
+  enabled: false
+  targetRevision: "1.15.2"
+  awsRegion: "us-east-1"
+  zoneType: "public"       # "public" | "private"
+  policy: "sync"           # "sync" (create+delete) | "upsert-only" (create only)
+  domainFilters: []        # e.g. ["example.com"] — restricts which zones ExternalDNS manages
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: ""
   configuration:
     enabled: false
 

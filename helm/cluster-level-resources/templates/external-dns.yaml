@@ -1,0 +1,54 @@
+{{- if index .Values "external-dns" "enabled" }}
+{{- $clusterName := .Values.eksClusterName | default .Values.cluster | toString }}
+{{- $defaultRoleArn := printf "arn:aws:iam::%s:role/gen3_service/%s--default--external-dns" (.Values.accountNumber | toString) $clusterName }}
+{{- $externalDnsRoleArn := default $defaultRoleArn (index .Values "external-dns" "serviceAccount" "annotations" "eks.amazonaws.com/role-arn") }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: external-dns
+      repoURL: https://kubernetes-sigs.github.io/external-dns/
+      targetRevision: {{ index .Values "external-dns" "targetRevision" }}
+      helm:
+        releaseName: external-dns
+      {{- if index .Values "external-dns" "configuration" "enabled" }}
+        valueFiles:
+          - $values/{{ .Values.cluster }}/cluster-values/external-dns.yaml
+    - repoURL: {{ .Values.configuration.configurationRepo }}
+      targetRevision: {{ .Values.configuration.configurationRevision }}
+      ref: values
+      {{- else }}
+        values: |
+          provider:
+            name: aws
+          aws:
+            region: {{ index .Values "external-dns" "awsRegion" | default "us-east-1" }}
+            zoneType: {{ index .Values "external-dns" "zoneType" | default "public" }}
+          domainFilters:
+            {{- range (index .Values "external-dns" "domainFilters") }}
+            - {{ . | quote }}
+            {{- end }}
+          policy: {{ index .Values "external-dns" "policy" | default "sync" }}
+          txtOwnerId: {{ $clusterName | quote }}
+          serviceAccount:
+            create: true
+            annotations:
+              eks.amazonaws.com/role-arn: {{ $externalDnsRoleArn | quote }}
+            name: external-dns
+          sources:
+            - service
+            - ingress
+      {{- end }}
+  destination:
+    server: {{ .Values.destinationServer | default "https://kubernetes.default.svc" | quote }}
+    namespace: kube-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=false
+    automated:
+      selfHeal: true
+{{ end }}
