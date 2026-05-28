@@ -14,7 +14,7 @@ spec:
         releaseName: ebs-csi-driver
       {{- if index .Values "ebs-csi-driver" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/ebs-csi-driver.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/ebs-csi-driver.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

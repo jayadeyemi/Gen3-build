@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: {{ .Values.configuration.configurationRepo }}
-    path: {{ .Values.cluster }}/cluster-values/custom-objects
+    path: {{ include "cluster-level-resources.configurationBasePath" . }}/custom-objects
     targetRevision: {{ .Values.configuration.configurationRevision }}
   syncPolicy:
     automated:

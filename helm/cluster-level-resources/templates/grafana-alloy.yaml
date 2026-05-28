@@ -14,7 +14,7 @@ spec:
         releaseName: alloy
       {{- if index .Values "grafana-alloy" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/grafana-alloy.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/grafana-alloy.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

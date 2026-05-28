@@ -14,7 +14,7 @@ spec:
         releaseName: calico
       {{- if index .Values "calico" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/calico.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/calico.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

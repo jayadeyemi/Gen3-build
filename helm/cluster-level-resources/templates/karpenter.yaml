@@ -16,7 +16,7 @@ spec:
         skipCrds: true
       {{- if index .Values "karpenter" "configuration" "enabled" }}
         valueFiles:
-          - "$values/{{ .Values.cluster }}/cluster-values/karpenter.yaml"
+          - "$values/{{ include "cluster-level-resources.configurationBasePath" . }}/karpenter.yaml"
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values
@@ -74,7 +74,7 @@ spec:
         releaseName: karpenter
       {{- if index .Values "karpenter" "configuration" "enabled" }}
         valueFiles:
-          - "$values/{{ .Values.cluster }}/cluster-values/karpenter.yaml"
+          - "$values/{{ include "cluster-level-resources.configurationBasePath" . }}/karpenter.yaml"
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

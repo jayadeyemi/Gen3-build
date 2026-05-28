@@ -14,7 +14,7 @@ spec:
         releaseName: metrics-server
       {{- if index .Values "metrics-server" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/metrics-server.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/metrics-server.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

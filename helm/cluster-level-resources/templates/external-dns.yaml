@@ -17,7 +17,7 @@ spec:
         releaseName: external-dns
       {{- if index .Values "external-dns" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/external-dns.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/external-dns.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

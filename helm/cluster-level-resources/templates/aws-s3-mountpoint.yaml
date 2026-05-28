@@ -14,7 +14,7 @@ spec:
         releaseName: aws-s3-mountpoint
       {{- if index .Values "aws-s3-mountpoint" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/aws-s3-mountpoint.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/aws-s3-mountpoint.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

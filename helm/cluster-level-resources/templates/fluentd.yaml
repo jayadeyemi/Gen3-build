@@ -14,9 +14,9 @@ spec:
         releaseName: fluentd
       {{- if index .Values "fluentd" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/fluentd.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/fluentd.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
-      targetRevision: {{ .Values.configurationRevision }}
+      targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values
       {{- else }}
         values: |

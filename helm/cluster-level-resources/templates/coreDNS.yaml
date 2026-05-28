@@ -14,7 +14,7 @@ spec:
         releaseName: coredns
       {{- if index .Values "coreDNS" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/coreDNS.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/coreDNS.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

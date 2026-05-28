@@ -14,7 +14,7 @@ spec:
         releaseName:
       {{- if index .Values "kube-state-metrics" "configuration" "enabled" }}
         valueFiles:
-          - "$values/{{ .Values.cluster }}/cluster-values/kube-state-metrics.yaml"
+          - "$values/{{ include "cluster-level-resources.configurationBasePath" . }}/kube-state-metrics.yaml"
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

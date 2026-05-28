@@ -14,7 +14,7 @@ spec:
         releaseName: vpc-cni
       {{- if index .Values "vpc-cni" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/vpc-cni.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/vpc-cni.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

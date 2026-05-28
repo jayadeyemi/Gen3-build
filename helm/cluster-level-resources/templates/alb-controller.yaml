@@ -17,7 +17,7 @@ spec:
         releaseName: alb-controller
       {{- if index .Values "alb-controller" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/alb-controller.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/alb-controller.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

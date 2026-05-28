@@ -64,6 +64,8 @@ global:
     dbCreate: true
     # -- (string) Name of external secret of the postgres master credentials. Disabled if empty
     externalSecret: ""
+    # -- (string) Remote AWS Secrets Manager key/ARN for postgres master credentials. Defaults to externalSecret when empty.
+    externalSecretRemoteKey: ""
     master:
       # -- global postgres master username
       username: postgres

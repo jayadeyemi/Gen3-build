@@ -14,7 +14,7 @@ spec:
         releaseName: crossplane
       {{- if index .Values "crossplane" "configuration" "enabled" }}
         valueFiles:
-          - $values/{{ .Values.cluster }}/cluster-values/crossplane.yaml
+          - $values/{{ include "cluster-level-resources.configurationBasePath" . }}/crossplane.yaml
     - repoURL: {{ .Values.configuration.configurationRepo }}
       targetRevision: {{ .Values.configuration.configurationRevision }}
       ref: values

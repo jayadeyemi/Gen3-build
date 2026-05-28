@@ -13,7 +13,7 @@ spec:
     helm:
       {{- if index .Values "argo-workflows" "configuration" "enabled" }}
       valueFiles:
-        - "$values/{{ .Values.cluster }}/cluster-values/argo-workflows.yaml"
+        - "$values/{{ include "cluster-level-resources.configurationBasePath" . }}/argo-workflows.yaml"
   - repoURL: {{ .Values.configuration.configurationRepo }}
     targetRevision: {{ .Values.configuration.configurationRevision }}
     ref: values

@@ -14,6 +14,7 @@ destinationServer: ""
 configuration:
   configurationRepo: https://github.com/uc-cdis/gen3-gitops
   configurationRevision: master
+  configurationBasePath: ""
 
 karpenterNodeConfigChart:
   repoURL: ""

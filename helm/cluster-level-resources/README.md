@@ -38,6 +38,7 @@ An app-of-apps Helm chart that allows for flexible deployment of resources that 
 | cilium.enabled | bool | `false` |  |
 | cilium.targetRevision | string | `"1.18.4"` |  |
 | cluster | string | `"unfunded"` |  |
+| configuration.configurationBasePath | string | `""` | Directory in `configurationRepo` that holds addon-specific config files. Defaults to `<cluster>/cluster-values`. |
 | configuration.configurationRepo | string | `"https://github.com/uc-cdis/gen3-gitops"` |  |
 | configuration.configurationRevision | string | `"master"` |  |
 | coreDNS.configuration.enabled | bool | `false` |  |
