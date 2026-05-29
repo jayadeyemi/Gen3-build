@@ -7,12 +7,8 @@ metadata:
   # endpoints.
   # Loads the list of users from env var.
   name: indexd-userdb
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded,HookFailed
 spec:
   backoffLimit: 0
-  ttlSecondsAfterFinished: 600
   template:
     metadata:
       labels:
@@ -101,22 +97,21 @@ spec:
             - |
               if command -v python &> /dev/null; then
                 echo 'python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}'
-                python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}" || true
+                python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}"
                 echo 'python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}'
-                python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}" || true
+                python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}"
                 echo 'python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}'
-                python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}" || true
+                python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}"
                 echo 'python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}'
-                python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}" || true
+                python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}"
               else
                 echo 'poetry run python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}'
-                poetry run python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}" || true
+                poetry run python /indexd/bin/index_admin.py create --username "fence" --password "${FENCE_PASS}"
                 echo 'poetry run python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}'
-                poetry run python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}" || true
+                poetry run python /indexd/bin/index_admin.py create --username "sheepdog" --password "${SHEEPDOG_PASS}"
                 echo 'poetry run python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}'
-                poetry run python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}" || true
+                poetry run python /indexd/bin/index_admin.py create --username "ssj" --password "${SSJ_PASS}"
                 echo 'poetry run python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}'
-                poetry run python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}" || true
+                poetry run python /indexd/bin/index_admin.py create --username "gateway" --password "${GATEWAY_PASS}"
               fi
-              exit 0
       restartPolicy: Never
